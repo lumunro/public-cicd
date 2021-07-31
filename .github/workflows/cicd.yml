@@ -1,5 +1,4 @@
 # Comment Here
-# Another Comment
 name: CI + CD
 
 on:
@@ -14,18 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Compile
-        run: echo Hello, world!
+      - name: Build
+        run: |
+        echo Hello, world!
     
-  DeployDev:
-    name: Deploy to Dev 
+  DeployDevelopment:
+    name: Deploy to Development 
     if: github.event_name == 'pull_request'
     needs: [Build]
     runs-on: ubuntu-latest
     env: 
-      CURRENT_ENVIRONMENT: development
+      CURRENT_ENVIRONMENT: Development
     environment: 
-      name: dev
+      name: Development
     steps:
       - name: Deploy
         run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
@@ -36,21 +36,21 @@ jobs:
     needs: [Build]
     runs-on: ubuntu-latest
     env: 
-      CURRENT_ENVIRONMENT: staging
+      CURRENT_ENVIRONMENT: Staging
     environment: 
-      name: stg
+      name: Staging
     steps:
       - name: Deploy
         run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
             
-  DeployProd:
+  DeployProduction:
     name: Deploy to Production 
     needs: [DeployStaging]
     runs-on: ubuntu-latest
     env: 
-      CURRENT_ENVIRONMENT: production
+      CURRENT_ENVIRONMENT: Production
     environment: 
-      name: prd
+      name: Production
     steps:
       - name: Deploy
         run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
