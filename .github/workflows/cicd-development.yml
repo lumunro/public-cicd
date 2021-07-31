@@ -19,7 +19,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: my-artifact
-          path: /iac/
+          if-no-files-found: error
+          path: iac/*
     
   DeployDevelopment:
     name: Deploy to Development 
