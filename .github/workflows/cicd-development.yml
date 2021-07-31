@@ -1,5 +1,5 @@
 # Comment Here
-name: CI + CD Dev
+name: CI + CD Development
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     
   DeployDevelopment:
     name: Deploy to Development 
-    if: github.event_name == 'pull_request'
+    # if: github.event_name == 'push'
     needs: [Build]
     runs-on: ubuntu-latest
     env: 

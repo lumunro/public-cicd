@@ -1,5 +1,5 @@
 # Comment Here
-name: CI + CD
+name: CI + CD Environments
 
 on:
   push:
