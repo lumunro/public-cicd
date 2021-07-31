@@ -23,10 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       CURRENT_ENVIRONMENT: Development
+      TEMPLATE_FILE: ./iac/main.bicep
+      PARAMETERS_FILE: ./iac/parameters.development.json
     environment: 
       name: Development
     steps:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
-          echo using parameter file ./iac/parameters.development.json
+          echo using template file ${{ env.TEMPLATE_FILE }}
+          echo using parameter file ${{ env.PARAMETERS_FILE }}
