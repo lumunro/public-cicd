@@ -18,7 +18,7 @@ jobs:
       
       - uses: actions/upload-artifact@v2
         with:
-          name: cicd-development-${{ GITHUB_RUN_ID }}
+          name: cicd-development-${GITHUB_RUN_ID}${GITHUB_RUN_NUMBER}
           if-no-files-found: error
           path: iac/*
     
