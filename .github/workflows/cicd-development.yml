@@ -1,0 +1,32 @@
+# Comment Here
+name: CI + CD Development
+
+on:
+  push:
+    branches: [ development ]
+  # pull_request:
+  #   branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: echo Hello, world!
+    
+  DeployDevelopment:
+    name: Deploy to Development 
+    # if: github.event_name == 'push'
+    needs: [Build]
+    runs-on: ubuntu-latest
+    env: 
+      CURRENT_ENVIRONMENT: Development
+    environment: 
+      name: Development
+    steps:
+      - name: Deploy
+        run: |
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using parameter file ./iac/parameters.development.json
