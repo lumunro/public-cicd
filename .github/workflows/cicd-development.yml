@@ -15,6 +15,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build
         run: echo Hello, world!
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: iac/
     
   DeployDevelopment:
     name: Deploy to Development 
@@ -33,4 +38,3 @@ jobs:
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
-          cat ${{ env.PARAMETERS_FILE }}
