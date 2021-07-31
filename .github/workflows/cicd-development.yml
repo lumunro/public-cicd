@@ -16,9 +16,10 @@ jobs:
       - name: Build
         run: echo Hello, world!
       
-      - uses: actions/upload-artifact@v2
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
         with:
-          name: cicd-development-${GITHUB_RUN_ID}${GITHUB_RUN_NUMBER}
+          name: cicd-development
           if-no-files-found: error
           path: iac/*
     
@@ -34,6 +35,11 @@ jobs:
     environment: 
       name: Development
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-development
+      
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
