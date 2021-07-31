@@ -27,7 +27,9 @@ jobs:
       name: Development
     steps:
       - name: Deploy
-        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+        run: |
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using parameter file ./iac/parameters.development.json
     
   DeployStaging:
     name: Deploy to Staging 
@@ -40,7 +42,9 @@ jobs:
       name: Staging
     steps:
       - name: Deploy
-        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+        run: |
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using parameter file ./iac/parameters.staging.json
             
   DeployProduction:
     name: Deploy to Production 
@@ -52,4 +56,6 @@ jobs:
       name: Production
     steps:
       - name: Deploy
-        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+        run: |
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using parameter file ./iac/parameters.production.json
