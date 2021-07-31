@@ -29,6 +29,7 @@ jobs:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using template file ./iac/main.bicep
           echo using parameter file ./iac/parameters.development.json
     
   DeployStaging:
@@ -44,6 +45,7 @@ jobs:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using template file ./iac/main.bicep
           echo using parameter file ./iac/parameters.staging.json
             
   DeployProduction:
@@ -58,4 +60,5 @@ jobs:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo using template file ./iac/main.bicep
           echo using parameter file ./iac/parameters.production.json
