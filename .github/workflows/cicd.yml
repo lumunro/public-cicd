@@ -13,10 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Compile
-        run: echo Hello, world!
+      - name: Build
+        run: |
+        echo Hello, world!
     
-  DeployDev:
+  DeployDevelopment:
     name: Deploy to Development 
     if: github.event_name == 'pull_request'
     needs: [Build]
@@ -42,7 +43,7 @@ jobs:
       - name: Deploy
         run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
             
-  DeployProd:
+  DeployProduction:
     name: Deploy to Production 
     needs: [DeployStaging]
     runs-on: ubuntu-latest
