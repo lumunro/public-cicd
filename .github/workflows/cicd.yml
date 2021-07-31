@@ -22,29 +22,35 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: [Build]
     runs-on: ubuntu-latest
+    env: 
+      CURRENT_ENVIRONMENT: development
     environment: 
       name: dev
     steps:
       - name: Deploy
-        run: echo I am deploying! 
+        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
     
   DeployStaging:
     name: Deploy to Staging 
     if: github.event.ref == 'refs/heads/main'
     needs: [Build]
     runs-on: ubuntu-latest
+    env: 
+      CURRENT_ENVIRONMENT: staging
     environment: 
       name: stg
     steps:
       - name: Deploy
-        run: echo I am deploying! 
+        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
             
   DeployProd:
     name: Deploy to Production 
     needs: [DeployStaging]
     runs-on: ubuntu-latest
+    env: 
+      CURRENT_ENVIRONMENT: production
     environment: 
       name: prd
     steps:
       - name: Deploy
-        run: echo I am deploying! 
+        run: echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
