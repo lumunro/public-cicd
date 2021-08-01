@@ -17,51 +17,54 @@ jobs:
         run: echo Hello, world!
     
   DeployDevelopment:
-    name: Deploy to Development 
+    name: Deploy to Development
+    environment: Development
     if: github.event_name == 'pull_request'
     needs: [Build]
     runs-on: ubuntu-latest
-    env: 
+    env:
       CURRENT_ENVIRONMENT: Development
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.development.json
-    environment: 
-      name: Development
+    # environment:
+    #   name: Development
     steps:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
-    
+  
   DeployStaging:
-    name: Deploy to Staging 
+    name: Deploy to Staging
+    environment: Staging
     if: github.event.ref == 'refs/heads/main'
     needs: [Build]
     runs-on: ubuntu-latest
-    env: 
+    env:
       CURRENT_ENVIRONMENT: Staging
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.staging.json
-    environment: 
-      name: Staging
+    # environment:
+    #   name: Staging
     steps:
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
-            
+  
   DeployProduction:
-    name: Deploy to Production 
+    name: Deploy to Production
+    environment: Production
     needs: [DeployStaging]
     runs-on: ubuntu-latest
-    env: 
+    env:
       CURRENT_ENVIRONMENT: Production
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.production.json
-    environment: 
-      name: Production
+    # environment:
+    #   name: Production
     steps:
       - name: Deploy
         run: |
