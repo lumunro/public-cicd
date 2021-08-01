@@ -46,4 +46,4 @@ jobs:
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
-          cat ${{ env.PARAMETERS_FILE }}
+          source ${{ env.PARAMETERS_FILE }}
