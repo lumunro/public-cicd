@@ -46,4 +46,4 @@ jobs:
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           pwd
-          cat ${{ env.PARAMETERS_FILE }}
+          # cat ${{ env.PARAMETERS_FILE }}
