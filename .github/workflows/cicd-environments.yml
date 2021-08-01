@@ -32,6 +32,8 @@ jobs:
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
   
   DeployStaging:
     name: Deploy to Staging
@@ -49,6 +51,8 @@ jobs:
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
   
   DeployProduction:
     name: Deploy to Production
@@ -65,3 +69,5 @@ jobs:
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
