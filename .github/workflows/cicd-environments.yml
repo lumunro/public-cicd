@@ -13,9 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Build
-        run: echo Hello, world!
-    
+        run: echo Hello, world
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: cicd-environments
+          if-no-files-found: error
+          path: iac/
+  
   DeployDevelopment:
     name: Deploy to Development
     environment: Development
@@ -26,14 +34,20 @@ jobs:
       CURRENT_ENVIRONMENT: Development
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.development.json
-    # environment:
-    #   name: Development
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-environments
+          path: iac/
+      
       - name: Deploy
         run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
   
   DeployStaging:
     name: Deploy to Staging
@@ -45,14 +59,20 @@ jobs:
       CURRENT_ENVIRONMENT: Staging
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.staging.json
-    # environment:
-    #   name: Staging
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-environments
+          path: iac/
+      
       - name: Deploy
         run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
   
   DeployProduction:
     name: Deploy to Production
@@ -63,11 +83,17 @@ jobs:
       CURRENT_ENVIRONMENT: Production
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.production.json
-    # environment:
-    #   name: Production
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-environments
+          path: iac/
+      
       - name: Deploy
         run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
