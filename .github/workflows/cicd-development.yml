@@ -45,4 +45,5 @@ jobs:
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
+          pwd
           cat ${{ env.PARAMETERS_FILE }}
