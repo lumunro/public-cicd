@@ -14,9 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: echo Hello, world!
-      
-      - name: Upload Artifacts
+        run: echo Hello, world
+    
+    - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: cicd-development
