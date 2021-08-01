@@ -15,6 +15,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build
         run: echo Hello, world!
+      
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: cicd-development
+          if-no-files-found: error
+          path: iac/*
     
   DeployDevelopment:
     name: Deploy to Development 
@@ -28,6 +35,11 @@ jobs:
     environment: 
       name: Development
     steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-development
+      
       - name: Deploy
         run: |
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
