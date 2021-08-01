@@ -28,12 +28,12 @@ jobs:
     # if: github.event_name == 'push'
     needs: [Build]
     runs-on: ubuntu-latest
+    environment: Development
     env: 
       CURRENT_ENVIRONMENT: Development
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.development.json
-    environment: 
-      name: Development
+    
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
