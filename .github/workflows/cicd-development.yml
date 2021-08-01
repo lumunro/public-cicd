@@ -39,7 +39,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cicd-development
-          if-no-files-found: error
+          # if-no-files-found: error
           path: iac/
       
       - name: Deploy
