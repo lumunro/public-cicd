@@ -1,20 +1,23 @@
-name: CI + CD Environments Using Inputs
+name: Redeploy Specific Environments Using Inputs
 
 on:
   workflow_dispatch:
     inputs:
+      reference:
+        description: Specify the branch reference tag or SHA
       deployDevelopment:
-        description: Deploy to Development
+        description: Deploy to development
       deployStaging:
-        description: Deploy to Staging
+        description: Deploy to staging
       deployProduction:
-        description: Deploy to Production
+        description: Deploy to production
 
 jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        ref: github.event.inputs.reference
 
       - name: Build
         run: echo Running build ${{ github.run_id }}...
