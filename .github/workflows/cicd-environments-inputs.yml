@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        ref: github.event.inputs.reference
+        ref: ${{ github.event.inputs.reference }}
 
       - name: Build
         run: echo Running build ${{ github.run_id }}...
