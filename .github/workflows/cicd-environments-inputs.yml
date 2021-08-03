@@ -1,30 +1,49 @@
-# Comment Here
-# Comment Here Too!
 name: CI + CD Environments Using Inputs
 
 on:
   workflow_dispatch:
     inputs:
+      deployDevelopment:
+        description: Deploy to Development
       deployStaging:
         description: Deploy to Staging
       deployProduction:
         description: Deploy to Production
 
 jobs:
-  Build:
+  development:
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deployDevelopment == 'true'
     runs-on: ubuntu-latest
+    environment: Development
     steps:
-      - uses: actions/checkout@v2
+      - name: Deploy
+        run: echo Deploying ${{ github.run_id }} to Development
 
-      - name: Build
-        run: echo Hello, world
+  staging:
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deployStaging == 'true'
+    runs-on: ubuntu-latest
+    environment: Staging
+    steps:
+      - name: Deploy
+        run: echo Deploying ${{ github.run_id }} to Staging
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: cicd-environments
-          if-no-files-found: error
-          path: iac/
+  production:
+    needs: staging
+    if: github.ref == 'refs/heads/main' || github.event.inputs.deployProduction == 'true'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Deploy
+        run: echo Deploying ${{ github.run_id }} to Production
+
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: cicd-environments
+      #     if-no-files-found: error
+      #     path: iac/
   
   # DeployDevelopment:
   #   name: Deploy to Development
