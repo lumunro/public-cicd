@@ -6,12 +6,19 @@ on:
     inputs:
       reference:
         description: Specify the branch reference tag or SHA
+        required: true
       deployDevelopment:
         description: Deploy to development
+        required: false
+        default: true
       deployStaging:
         description: Deploy to staging
+        required: false
+        default: false
       deployProduction:
         description: Deploy to production
+        required: false
+        default: false
 
 jobs:
   Build:
@@ -23,6 +30,7 @@ jobs:
       - name: Build
         run: |
           echo Github reference ${{ github.ref }}
+          echo Github reference SHA ${{ github.sha }}
           echo Running build ${{ github.run_id }}...
   
   Development:
