@@ -6,7 +6,7 @@ on:
     inputs:
       reference:
         description: Specify the branch reference tag or SHA
-        required: true
+        # required: true
       deployDevelopment:
         description: Deploy to development
         required: false
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        ref: ${{ github.event.inputs.reference }}
+        # ref: ${{ github.event.inputs.reference }}
 
       - name: Build
         run: |
