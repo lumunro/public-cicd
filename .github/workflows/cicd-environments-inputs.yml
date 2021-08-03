@@ -36,7 +36,8 @@ jobs:
   
   Development:
     needs: Build
-    if: github.ref == 'refs/heads/main' || github.event.inputs.deployDevelopment == 'true'
+    # if: github.ref == 'refs/heads/main' || github.event.inputs.deployDevelopment == 'true'
+    if: github.event.inputs.deployDevelopment == 'true'
     runs-on: ubuntu-latest
     environment: Development
     steps:
@@ -45,7 +46,8 @@ jobs:
 
   Staging:
     needs: Build
-    if: github.ref == 'refs/heads/main' || github.event.inputs.deployStaging == 'true'
+    # if: github.ref == 'refs/heads/main' || github.event.inputs.deployStaging == 'true'
+    if: github.event.inputs.deployStaging == 'true'
     runs-on: ubuntu-latest
     environment: Staging
     steps:
@@ -54,7 +56,8 @@ jobs:
 
   Production:
     needs: Build
-    if: github.ref == 'refs/heads/main' || github.event.inputs.deployProduction == 'true'
+    # if: github.ref == 'refs/heads/main' || github.event.inputs.deployProduction == 'true'
+    github.event.inputs.deployProduction == 'true'
     runs-on: ubuntu-latest
     environment: Production
     steps:
