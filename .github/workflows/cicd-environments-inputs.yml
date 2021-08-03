@@ -21,7 +21,9 @@ jobs:
         ref: ${{ github.event.inputs.reference }}
 
       - name: Build
-        run: echo Running build ${{ github.run_id }}...
+        run: |
+          echo Github reference ${{ github.ref }}
+          echo Running build ${{ github.run_id }}...
   
   Development:
     needs: Build
