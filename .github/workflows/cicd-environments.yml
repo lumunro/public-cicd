@@ -8,24 +8,6 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-anchors:
-  download_artifacts: &download_artifacts
-    name: Download Artifacts
-    uses: actions/download-artifact@v2
-    with:
-      name: cicd-environments
-      path: iac/
-  
-  deploy: &deploy
-    name: Deploy
-    run: |
-      echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
-      echo using template file ${{ env.TEMPLATE_FILE }}
-      echo using parameter file ${{ env.PARAMETERS_FILE }}
-      echo contents of parameters file as follows:
-      cat ${{ env.PARAMETERS_FILE }}
-
-
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -53,8 +35,19 @@ jobs:
       TEMPLATE_FILE: ./iac/main.bicep
       PARAMETERS_FILE: ./iac/parameters.development.json
     steps:
-      - *download_artifacts
-      - *deploy
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: cicd-environments
+          path: iac/
+      
+      - name: Deploy
+        run: |
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
+          echo using template file ${{ env.TEMPLATE_FILE }}
+          echo using parameter file ${{ env.PARAMETERS_FILE }}
+          echo contents of parameters file as follows:
+          cat ${{ env.PARAMETERS_FILE }}
 
         # Log into Azure
       - name: Azure Login
