@@ -1,3 +1,23 @@
 {
-    "Environment": "Development"
+    "storageAccountName": {
+        "value": "storagedev3498531"
+    },
+    "storageAccountSku": {
+        "value": {
+            "name": "Standard_RAGRS",
+            "tier": "Standard"
+        }
+    },
+    "storageAccountAllowedNetworks": {
+        "value": [
+            {
+                "value": "1.1.1.0/30",
+                "action": "Allow"
+            },
+            {
+                "value": "1.1.2.0/24",
+                "action": "Allow"
+            }
+        ]
+    }
 }

@@ -1,3 +1,23 @@
 {
-    "Environment": "Production"
+    "storageAccountName": {
+        "value": "storageprd3498531"
+    },
+    "storageAccountSku": {
+        "value": {
+            "name": "Standard_RAGRS",
+            "tier": "Standard"
+        }
+    },
+    "storageAccountAllowedNetworks": {
+        "value": [
+            {
+                "value": "1.3.1.0/30",
+                "action": "Allow"
+            },
+            {
+                "value": "1.3.2.0/24",
+                "action": "Allow"
+            }
+        ]
+    }
 }

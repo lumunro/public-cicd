@@ -1,5 +1,4 @@
 # Comment Here
-# Comment Here Too!
 name: CI + CD Environments
 
 on:
@@ -49,6 +48,28 @@ jobs:
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
+
+        # Log into Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+        # Pre Deployment Tasks
+      - name: Pre Deployment Tasks
+        run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+        # Deploy Bicep Template
+      - name: Deploy Bicep Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+          scope: resourcegroup
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          template: ${{ env.TEMPLATE_FILE }}
+          parameters: ${{ env.PARAMETERS_FILE }}
   
   DeployStaging:
     name: Deploy to Staging
@@ -74,6 +95,28 @@ jobs:
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
+
+      # Log into Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+        # Pre Deployment Tasks
+      - name: Pre Deployment Tasks
+        run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+        # Deploy Bicep Template
+      - name: Deploy Bicep Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+          scope: resourcegroup
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          template: ${{ env.TEMPLATE_FILE }}
+          parameters: ${{ env.PARAMETERS_FILE }}
   
   DeployProduction:
     name: Deploy to Production
@@ -98,3 +141,25 @@ jobs:
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
+      
+      # Log into Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+        # Pre Deployment Tasks
+      - name: Pre Deployment Tasks
+        run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
+        # Deploy Bicep Template
+      - name: Deploy Bicep Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+          scope: resourcegroup
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          template: ${{ env.TEMPLATE_FILE }}
+          parameters: ${{ env.PARAMETERS_FILE }}
