@@ -11,19 +11,19 @@ on:
 anchors:
   download_artifacts: &download_artifacts
     name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: cicd-environments
-          path: iac/
+    uses: actions/download-artifact@v2
+    with:
+      name: cicd-environments
+      path: iac/
   
   deploy: &deploy
     name: Deploy
-        run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
-          echo using template file ${{ env.TEMPLATE_FILE }}
-          echo using parameter file ${{ env.PARAMETERS_FILE }}
-          echo contents of parameters file as follows:
-          cat ${{ env.PARAMETERS_FILE }}
+    run: |
+      echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
+      echo using template file ${{ env.TEMPLATE_FILE }}
+      echo using parameter file ${{ env.PARAMETERS_FILE }}
+      echo contents of parameters file as follows:
+      cat ${{ env.PARAMETERS_FILE }}
 
 
 jobs:
