@@ -4,48 +4,78 @@ name: CI + CD Development
 on:
   push:
     branches: [ development ]
-  # pull_request:
-  #   branches: [ main ]
   workflow_dispatch:
+
+anchors:
+  runs_on: &runs_on
+    ubuntu-latest
+  
+  checkout_code: &checkout_code
+    uses: actions/checkout@v2
+  
+  build_code: &build_code
+    name: Build Code
+    run: echo Building some code...
+  
+  upload_artifacts: &upload_artifacts
+    name: Upload Artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: cicd-environments
+      if-no-files-found: error
+      path: iac/
+  
+  download_artifacts: &download_artifacts
+    name: Download Artifacts
+    uses: actions/download-artifact@v2
+    with:
+      name: cicd-environments
+      path: iac/
+  
+  azure_login: &azure_login
+    name: Azure Login
+    uses: azure/login@v1
+    with:
+      creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+  pre_deployment_tasks: &pre_deployment_tasks
+    name: Pre Deployment Tasks
+    run: |
+      echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+      echo "CURRENT_ENVIRONMENT_LOWER=${CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
+      echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
+      echo using template file ./iac/main.bicep
+      echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
+  
+  deploy_bicep_template: &deploy_bicep_template
+    name: Deploy Bicep Template
+    uses: azure/arm-deploy@v1
+    with:
+      subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+      deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+      scope: resourcegroup
+      resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+      template: ./iac/main.bicep
+      parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
+    runs-on: *runs_on
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Build
-        run: echo Hello, world
-      
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: cicd-development
-          if-no-files-found: error
-          path: iac/
-    
+      - *checkout_code
+      - *build_code
+      - *upload_artifacts
+  
   DeployDevelopment:
     name: Deploy to Development
-    needs: [Build]
-    runs-on: ubuntu-latest
     environment: Development
-    env: 
+    if: github.event.ref == 'refs/heads/development'
+    needs: [Build]
+    runs-on: *runs_on
+    env:
       CURRENT_ENVIRONMENT: Development
-      TEMPLATE_FILE: ./iac/main.bicep
-      PARAMETERS_FILE: ./iac/parameters.development.json
-    
     steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: cicd-development
-          path: iac/
-      
-      - name: Deploy
-        run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
-          echo using template file ${{ env.TEMPLATE_FILE }}
-          echo using parameter file ${{ env.PARAMETERS_FILE }}
-          ls -R
-          # echo contents of parameters file as follows:
-          # cat ${{ env.PARAMETERS_FILE }}
+      - *download_artifacts
+      - *azure_login
+      - *pre_deployment_tasks
+      - *deploy_bicep_template
