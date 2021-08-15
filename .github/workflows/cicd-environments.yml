@@ -2,6 +2,7 @@
 ## Generated from cicd-environments.src.yml with make-workflows.sh
 
 # Comment Here
+# 2
 name: CI + CD Environments
 on:
   push:
@@ -43,9 +44,10 @@ jobs:
       - name: Pre Deployment Tasks
         run: |
           echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "CURRENT_ENVIRONMENT_LOWER=${env.CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -54,7 +56,7 @@ jobs:
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ./iac/main.bicep
-          parameters: ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
   DeployStaging:
     name: Deploy to Staging
     environment: Staging
@@ -76,9 +78,10 @@ jobs:
       - name: Pre Deployment Tasks
         run: |
           echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "CURRENT_ENVIRONMENT_LOWER=${env.CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -87,7 +90,7 @@ jobs:
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ./iac/main.bicep
-          parameters: ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
   DeployProduction:
     name: Deploy to Production
     environment: Production
@@ -108,9 +111,10 @@ jobs:
       - name: Pre Deployment Tasks
         run: |
           echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "CURRENT_ENVIRONMENT_LOWER=${env.CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -119,4 +123,4 @@ jobs:
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ./iac/main.bicep
-          parameters: ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
