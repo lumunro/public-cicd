@@ -20,8 +20,8 @@ jobs:
           name: cicd-environments
           if-no-files-found: error
           path: iac/
-  DeployDevelopment:
-    name: Deploy to Development
+  Development:
+    name: Development
     environment: Development
     if: github.event.ref == 'refs/heads/development'
     needs: [Build]
