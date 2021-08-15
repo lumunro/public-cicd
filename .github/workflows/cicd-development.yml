@@ -53,4 +53,4 @@ jobs:
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ./iac/main.bicep
-          parameters: ./iac/parameters.${ CURRENT_ENVIRONMENT_LOWER }.json
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
