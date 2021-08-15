@@ -1,51 +1,56 @@
+## DO NOT EDIT
+## Generated from cicd-development.src.yml with make-workflows.sh
+
 # Comment Here
 name: CI + CD Development
-
 on:
   push:
-    branches: [ development ]
-  # pull_request:
-  #   branches: [ main ]
+    branches: [development]
   workflow_dispatch:
-
 jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Build
-        run: echo Hello, world
-      
+      - name: Build Code
+        run: echo Building some code...
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: cicd-development
+          name: cicd-environments
           if-no-files-found: error
           path: iac/
-    
   DeployDevelopment:
     name: Deploy to Development
+    environment: Development
+    if: github.event.ref == 'refs/heads/development'
     needs: [Build]
     runs-on: ubuntu-latest
-    environment: Development
-    env: 
+    env:
       CURRENT_ENVIRONMENT: Development
-      TEMPLATE_FILE: ./iac/main.bicep
-      PARAMETERS_FILE: ./iac/parameters.development.json
-    
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: cicd-development
+          name: cicd-environments
           path: iac/
-      
-      - name: Deploy
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Pre Deployment Tasks
         run: |
-          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}!
-          echo using template file ${{ env.TEMPLATE_FILE }}
-          echo using parameter file ${{ env.PARAMETERS_FILE }}
-          ls -R
-          # echo contents of parameters file as follows:
-          # cat ${{ env.PARAMETERS_FILE }}
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "CURRENT_ENVIRONMENT_LOWER=${CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
+          echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
+          echo using template file ./iac/main.bicep
+          echo using parameter file ./iac/parameters.${CURRENT_ENVIRONMENT,,}.json
+      - name: Deploy Bicep Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+          scope: resourcegroup
+          resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+          template: ./iac/main.bicep
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
