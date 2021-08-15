@@ -66,8 +66,8 @@ jobs:
       - *build_code
       - *upload_artifacts
   
-  DeployDevelopment:
-    name: Deploy to Development
+  Development:
+    name: Development
     environment: Development
     if: github.event.ref == 'refs/heads/development'
     needs: [Build]

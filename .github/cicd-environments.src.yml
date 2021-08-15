@@ -68,8 +68,8 @@ jobs:
       - *build_code
       - *upload_artifacts
   
-  DeployDevelopment:
-    name: Deploy to Development
+  Development:
+    name: Development
     environment: Development
     if: github.event.ref == 'refs/heads/development'
     needs: [Build]
@@ -82,8 +82,8 @@ jobs:
       - *pre_deployment_tasks
       - *deploy_bicep_template
   
-  DeployStaging:
-    name: Deploy to Staging
+  Staging:
+    name: Staging
     environment: Staging
     if: github.event.ref == 'refs/heads/main'
     needs: [Build]
@@ -96,10 +96,10 @@ jobs:
       - *pre_deployment_tasks
       - *deploy_bicep_template
   
-  DeployProduction:
-    name: Deploy to Production
+  Production:
+    name: Production
     environment: Production
-    needs: [DeployStaging]
+    needs: [Staging]
     runs-on: *runs_on
     env:
       CURRENT_ENVIRONMENT: Production
