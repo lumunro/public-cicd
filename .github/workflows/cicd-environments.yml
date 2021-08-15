@@ -1,33 +1,31 @@
+## DO NOT EDIT
+## Generated from cicd-environments.src.yml with make-workflows.sh
+
 # Comment Here
 name: CI + CD Environments
-
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
-
 jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Build
-        run: echo Hello, world
-
+      - name: Build Code
+        run: echo Building some code...
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: cicd-environments
           if-no-files-found: error
           path: iac/
-  
   DeployDevelopment:
     name: Deploy to Development
     environment: Development
-    if: github.event_name == 'pull_request'
+    if: github.event.ref == 'refs/heads/development'
     needs: [Build]
     runs-on: ubuntu-latest
     env:
@@ -40,27 +38,18 @@ jobs:
         with:
           name: cicd-environments
           path: iac/
-      
-      - name: Deploy
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Pre Deployment Tasks
         run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
-
-        # Log into Azure
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-        # Pre Deployment Tasks
-      - name: Pre Deployment Tasks
-        run: |
-          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-
-        # Deploy Bicep Template
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -70,7 +59,6 @@ jobs:
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ${{ env.TEMPLATE_FILE }}
           parameters: ${{ env.PARAMETERS_FILE }}
-  
   DeployStaging:
     name: Deploy to Staging
     environment: Staging
@@ -87,27 +75,18 @@ jobs:
         with:
           name: cicd-environments
           path: iac/
-      
-      - name: Deploy
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Pre Deployment Tasks
         run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
-
-      # Log into Azure
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-        # Pre Deployment Tasks
-      - name: Pre Deployment Tasks
-        run: |
-          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-
-        # Deploy Bicep Template
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -117,7 +96,6 @@ jobs:
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
           template: ${{ env.TEMPLATE_FILE }}
           parameters: ${{ env.PARAMETERS_FILE }}
-  
   DeployProduction:
     name: Deploy to Production
     environment: Production
@@ -133,27 +111,18 @@ jobs:
         with:
           name: cicd-environments
           path: iac/
-      
-      - name: Deploy
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Pre Deployment Tasks
         run: |
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ${{ env.TEMPLATE_FILE }}
           echo using parameter file ${{ env.PARAMETERS_FILE }}
           echo contents of parameters file as follows:
           cat ${{ env.PARAMETERS_FILE }}
-      
-      # Log into Azure
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-        # Pre Deployment Tasks
-      - name: Pre Deployment Tasks
-        run: |
-          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
-
-        # Deploy Bicep Template
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:

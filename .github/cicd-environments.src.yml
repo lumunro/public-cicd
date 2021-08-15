@@ -1,0 +1,117 @@
+# Comment Here
+name: CI + CD Environments
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+anchors:
+  runs_on: &runs_on
+    ubuntu-latest
+  
+  checkout_code: &checkout_code
+    uses: actions/checkout@v2
+  
+  build_code: &build_code
+    name: Build Code
+    run: echo Building some code...
+  
+  upload_artifacts: &upload_artifacts
+    name: Upload Artifacts
+    uses: actions/upload-artifact@v2
+    with:
+      name: cicd-environments
+      if-no-files-found: error
+      path: iac/
+  
+  download_artifacts: &download_artifacts
+    name: Download Artifacts
+    uses: actions/download-artifact@v2
+    with:
+      name: cicd-environments
+      path: iac/
+  
+  azure_login: &azure_login
+    name: Azure Login
+    uses: azure/login@v1
+    with:
+      creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+  pre_deployment_tasks: &pre_deployment_tasks
+    name: Pre Deployment Tasks
+    run: |
+      echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+      echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
+      echo using template file ${{ env.TEMPLATE_FILE }}
+      echo using parameter file ${{ env.PARAMETERS_FILE }}
+      echo contents of parameters file as follows:
+      cat ${{ env.PARAMETERS_FILE }}
+  
+  deploy_bicep_template: &deploy_bicep_template
+    name: Deploy Bicep Template
+    uses: azure/arm-deploy@v1
+    with:
+      subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+      deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
+      scope: resourcegroup
+      resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
+      template: ${{ env.TEMPLATE_FILE }}
+      parameters: ${{ env.PARAMETERS_FILE }}
+
+jobs:
+  Build:
+    runs-on: *runs_on
+    steps:
+      - *checkout_code
+      - *build_code
+      - *upload_artifacts
+  
+  DeployDevelopment:
+    name: Deploy to Development
+    environment: Development
+    if: github.event.ref == 'refs/heads/development'
+    needs: [Build]
+    runs-on: *runs_on
+    env:
+      CURRENT_ENVIRONMENT: Development
+      TEMPLATE_FILE: ./iac/main.bicep
+      PARAMETERS_FILE: ./iac/parameters.development.json
+    steps:
+      - *download_artifacts
+      - *azure_login
+      - *pre_deployment_tasks
+      - *deploy_bicep_template
+  
+  DeployStaging:
+    name: Deploy to Staging
+    environment: Staging
+    if: github.event.ref == 'refs/heads/main'
+    needs: [Build]
+    runs-on: *runs_on
+    env:
+      CURRENT_ENVIRONMENT: Staging
+      TEMPLATE_FILE: ./iac/main.bicep
+      PARAMETERS_FILE: ./iac/parameters.staging.json
+    steps:
+      - *download_artifacts
+      - *azure_login
+      - *pre_deployment_tasks
+      - *deploy_bicep_template
+  
+  DeployProduction:
+    name: Deploy to Production
+    environment: Production
+    needs: [DeployStaging]
+    runs-on: *runs_on
+    env:
+      CURRENT_ENVIRONMENT: Production
+      TEMPLATE_FILE: ./iac/main.bicep
+      PARAMETERS_FILE: ./iac/parameters.production.json
+    steps:
+      - *download_artifacts
+      - *azure_login
+      - *pre_deployment_tasks
+      - *deploy_bicep_template
