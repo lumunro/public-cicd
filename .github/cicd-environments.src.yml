@@ -45,8 +45,8 @@ anchors:
     run: |
       echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
       echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
-      echo using template file ${{ env.TEMPLATE_FILE }}
-      echo using parameter file ${{ env.PARAMETERS_FILE }}
+      echo using template file ./iac/main.bicep
+      echo using parameter file ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
       # echo contents of parameters file as follows:
       # cat ${{ env.PARAMETERS_FILE }}
   
@@ -59,7 +59,7 @@ anchors:
       scope: resourcegroup
       resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
       template: ./iac/main.bicep
-      parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
+      parameters: ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
 
 jobs:
   Build:
