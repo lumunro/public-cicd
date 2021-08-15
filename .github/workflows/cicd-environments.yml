@@ -46,7 +46,7 @@ jobs:
           echo "CURRENT_ENVIRONMENT_LOWER=${CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
+          echo using parameter file ./iac/parameters.${CURRENT_ENVIRONMENT,,}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -80,7 +80,7 @@ jobs:
           echo "CURRENT_ENVIRONMENT_LOWER=${CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
+          echo using parameter file ./iac/parameters.${CURRENT_ENVIRONMENT,,}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
@@ -113,7 +113,7 @@ jobs:
           echo "CURRENT_ENVIRONMENT_LOWER=${CURRENT_ENVIRONMENT,,}" >> $GITHUB_ENV
           echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
           echo using template file ./iac/main.bicep
-          echo using parameter file ./iac/parameters.${{ env.CURRENT_ENVIRONMENT_LOWER }}.json
+          echo using parameter file ./iac/parameters.${CURRENT_ENVIRONMENT,,}.json
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
