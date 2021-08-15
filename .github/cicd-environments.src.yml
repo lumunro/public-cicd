@@ -47,8 +47,6 @@ anchors:
       echo I am deploying in ${{ env.CURRENT_ENVIRONMENT }}
       echo using template file ./iac/main.bicep
       echo using parameter file ./iac/parameters.${{ lowercase(env.CURRENT_ENVIRONMENT) }}.json
-      # echo contents of parameters file as follows:
-      # cat ${{ env.PARAMETERS_FILE }}
   
   deploy_bicep_template: &deploy_bicep_template
     name: Deploy Bicep Template
