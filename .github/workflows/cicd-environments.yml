@@ -30,8 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CURRENT_ENVIRONMENT: Development
-      TEMPLATE_FILE: ./iac/main.bicep
-      PARAMETERS_FILE: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -57,8 +55,8 @@ jobs:
           deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          template: ${{ env.TEMPLATE_FILE }}
-          parameters: ${{ env.PARAMETERS_FILE }}
+          template: ./iac/main.bicep
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
   DeployStaging:
     name: Deploy to Staging
     environment: Staging
@@ -67,8 +65,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CURRENT_ENVIRONMENT: Staging
-      TEMPLATE_FILE: ./iac/main.bicep
-      PARAMETERS_FILE: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -94,8 +90,8 @@ jobs:
           deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          template: ${{ env.TEMPLATE_FILE }}
-          parameters: ${{ env.PARAMETERS_FILE }}
+          template: ./iac/main.bicep
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
   DeployProduction:
     name: Deploy to Production
     environment: Production
@@ -103,8 +99,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CURRENT_ENVIRONMENT: Production
-      TEMPLATE_FILE: ./iac/main.bicep
-      PARAMETERS_FILE: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -130,5 +124,5 @@ jobs:
           deploymentName: ghactions-bicep-deploy-${{ env.DATETIME }}
           scope: resourcegroup
           resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-          template: ${{ env.TEMPLATE_FILE }}
-          parameters: ${{ env.PARAMETERS_FILE }}
+          template: ./iac/main.bicep
+          parameters: ./iac/parameters.${{ env.CURRENT_ENVIRONMENT }}.json
