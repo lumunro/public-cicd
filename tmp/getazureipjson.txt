@@ -1,0 +1,9 @@
+## Get latest file from URL which is the most up to date version aparently. ##
+$azureiprangeurl = 'https://www.microsoft.com/en-us/download/confirmation.aspx?id=56519'
+$azureiprangepage = Invoke-WebRequest -UseBasicParsing -Uri $azureiprangeurl
+$azureiprangexmlfileurl = (($azureiprangepage.Links | Where-Object { $_.href -match ".*ServiceTags_Public_\d{8}.json" }).href)[0]
+$fileobj = Invoke-RestMethod -UseBasicParsing -Uri $azureiprangexmlfileurl
+
+$fileobj.values.properties | Where-Object { $_.region -eq "northeurope" -and $_.systemService -eq "AzureAppService" } | Select-Object -ExpandProperty addressPrefixes
+$fileobj.values.properties | Where-Object { $_.region -eq "northeurope" -and $_.systemService -eq "AzureStorage" } | Select-Object -ExpandProperty addressPrefixes
+$fileobj.values.properties | Where-Object { $_.region -eq "northeurope" -and $_.platform -eq "Azure" -and $_.systemService -eq ""} | Select-Object -ExpandProperty addressPrefixes
